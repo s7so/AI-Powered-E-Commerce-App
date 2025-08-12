@@ -62,4 +62,48 @@ class FirestoreService {
   Future<void> deleteProduct(String id) async {
     await _db.collection('products').doc(id).delete();
   }
+
+  Future<int> seedSampleProducts() async {
+    final existing = await _db.collection('products').limit(1).get();
+    if (existing.docs.isNotEmpty) return 0;
+    final now = DateTime.now();
+    final samples = <Product>[
+      Product(
+        id: '',
+        name: 'ساعة ذكية Alpha',
+        description: 'ساعة ذكية ببطارية طويلة ودعم للإشعارات',
+        price: 299.99,
+        imageUrl: 'https://picsum.photos/seed/alpha/800/600',
+        category: 'ساعات',
+        specialOffer: true,
+        createdAt: now,
+      ),
+      Product(
+        id: '',
+        name: 'سماعات بلوتوث BeatX',
+        description: 'صوت قوي وعزل ضوضاء',
+        price: 199.00,
+        imageUrl: 'https://picsum.photos/seed/beatx/800/600',
+        category: 'سماعات',
+        specialOffer: false,
+        createdAt: now,
+      ),
+      Product(
+        id: '',
+        name: 'هاتف ذكي Nova',
+        description: 'شاشة AMOLED وكاميرا بدقة عالية',
+        price: 1599.00,
+        imageUrl: 'https://picsum.photos/seed/nova/800/600',
+        category: 'هواتف',
+        specialOffer: false,
+        createdAt: now,
+      ),
+    ];
+    int created = 0;
+    for (final p in samples) {
+      await createProduct(p);
+      created++;
+    }
+    return created;
+  }
 }

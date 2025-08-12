@@ -10,7 +10,27 @@ class AdminDashboardScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final productsAsync = ref.watch(productsStreamProvider);
     return Scaffold(
-      appBar: AppBar(title: const Text('لوحة المسؤول')),
+      appBar: AppBar(
+        title: const Text('لوحة المسؤول'),
+        actions: [
+          IconButton(
+            tooltip: 'Seed',
+            onPressed: () async {
+              try {
+                final created = await ref.read(firestoreServiceProvider).seedSampleProducts();
+                // ignore: use_build_context_synchronously
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text(created == 0 ? 'البيانات موجودة مسبقاً' : 'تمت إضافة $created منتجات')),
+                );
+              } catch (e) {
+                // ignore: use_build_context_synchronously
+                ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('خطأ: $e')));
+              }
+            },
+            icon: const Icon(Icons.auto_awesome_mosaic_outlined),
+          ),
+        ],
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.go('/admin/edit/new'),
         child: const Icon(Icons.add),

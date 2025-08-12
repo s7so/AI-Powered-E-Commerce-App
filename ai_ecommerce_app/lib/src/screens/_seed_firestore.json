@@ -1,0 +1,34 @@
+{
+  "products": [
+    {
+      "id": "",
+      "name": "ساعة ذكية Alpha",
+      "description": "ساعة ذكية ببطارية طويلة ودعم للإشعارات",
+      "price": 299.99,
+      "imageUrl": "https://picsum.photos/seed/alpha/800/600",
+      "category": "ساعات",
+      "specialOffer": true,
+      "createdAt": {"_seconds": 1704067200, "_nanoseconds": 0}
+    },
+    {
+      "id": "",
+      "name": "سماعات بلوتوث BeatX",
+      "description": "صوت قوي وعزل ضوضاء",
+      "price": 199.00,
+      "imageUrl": "https://picsum.photos/seed/beatx/800/600",
+      "category": "سماعات",
+      "specialOffer": false,
+      "createdAt": {"_seconds": 1704153600, "_nanoseconds": 0}
+    },
+    {
+      "id": "",
+      "name": "هاتف ذكي Nova",
+      "description": "شاشة AMOLED وكاميرا بدقة عالية",
+      "price": 1599.00,
+      "imageUrl": "https://picsum.photos/seed/nova/800/600",
+      "category": "هواتف",
+      "specialOffer": false,
+      "createdAt": {"_seconds": 1704240000, "_nanoseconds": 0}
+    }
+  ]
+}

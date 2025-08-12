@@ -51,8 +51,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             setState(() => _loading = true);
                             try {
                               await ref.read(authServiceProvider).signInWithEmail(_emailController.text.trim(), _passwordController.text);
-                              if (context.mounted) context.go('/home');
+                              if (!mounted) return;
+                              context.go('/home');
                             } catch (e) {
+                              if (!mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('فشل الدخول: $e')));
                             } finally {
                               if (mounted) setState(() => _loading = false);
@@ -66,8 +68,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     onPressed: () async {
                       try {
                         await ref.read(authServiceProvider).signInWithGoogle();
-                        if (mounted) context.go('/home');
+                        if (!mounted) return;
+                        context.go('/home');
                       } catch (e) {
+                        if (!mounted) return;
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('فشل Google: $e')));
                       }
                     },

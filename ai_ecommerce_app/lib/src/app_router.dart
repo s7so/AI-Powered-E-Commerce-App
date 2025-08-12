@@ -2,8 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
-import 'providers/auth_provider.dart';
 import 'screens/auth/login_screen.dart';
 import 'screens/auth/register_screen.dart';
 import 'screens/home/home_screen.dart';
@@ -14,13 +14,13 @@ import 'screens/admin/admin_dashboard_screen.dart';
 import 'screens/admin/edit_product_screen.dart';
 
 final appRouterProvider = Provider<GoRouter>((ref) {
-  final authStream = ref.watch(authStateChangesProvider.stream);
+  final authStream = FirebaseAuth.instance.authStateChanges();
 
   return GoRouter(
     initialLocation: '/home',
     refreshListenable: GoRouterRefreshStream(authStream),
     redirect: (context, state) {
-      final isLoggedIn = ref.read(authStateChangesProvider).asData?.value != null;
+      final isLoggedIn = FirebaseAuth.instance.currentUser != null;
       final isLoggingIn = state.matchedLocation.startsWith('/login') || state.matchedLocation.startsWith('/register');
       if (!isLoggedIn && !isLoggingIn) return '/login';
       if (isLoggedIn && (isLoggingIn)) return '/home';

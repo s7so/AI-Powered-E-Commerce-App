@@ -51,8 +51,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             setState(() => _loading = true);
                             try {
                               await ref.read(authServiceProvider).registerWithEmail(_emailController.text.trim(), _passwordController.text);
-                              if (context.mounted) context.go('/home');
+                              if (!mounted) return;
+                              context.go('/home');
                             } catch (e) {
+                              if (!mounted) return;
                               ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('فشل التسجيل: $e')));
                             } finally {
                               if (mounted) setState(() => _loading = false);

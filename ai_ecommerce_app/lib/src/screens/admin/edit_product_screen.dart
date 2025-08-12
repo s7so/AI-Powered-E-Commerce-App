@@ -72,8 +72,6 @@ class _EditProductScreenState extends ConsumerState<EditProductScreen> {
                     child: OutlinedButton.icon(
                       icon: const Icon(Icons.upload_file),
                       onPressed: () async {
-                        // Placeholder: in real app, use image_picker.
-                        // Here we keep it simple: allow entering a local file path (dev environment)
                         final path = await _promptForPath(context);
                         if (path != null) setState(() => _imageFile = File(path));
                       },
@@ -92,27 +90,29 @@ class _EditProductScreenState extends ConsumerState<EditProductScreen> {
                   try {
                     final now = DateTime.now();
                     String imageUrl = _imageUrlController.text.trim();
+                    String newId = widget.productId == null || widget.productId == 'new' ? now.millisecondsSinceEpoch.toString() : widget.productId!;
                     if (_imageFile != null) {
-                      final productId = widget.productId == null || widget.productId == 'new' ? now.millisecondsSinceEpoch.toString() : widget.productId!;
-                      imageUrl = await StorageService().uploadProductImage(file: _imageFile!, productId: productId);
+                      imageUrl = await StorageService().uploadProductImage(file: _imageFile!, productId: newId);
                     }
                     final product = Product(
-                      id: widget.productId == null || widget.productId == 'new' ? '' : widget.productId!,
+                      id: widget.productId == null || widget.productId == 'new' ? newId : widget.productId!,
                       name: _nameController.text.trim(),
                       description: _descController.text.trim(),
                       price: double.tryParse(_priceController.text.trim()) ?? 0,
                       imageUrl: imageUrl,
                       category: _categoryController.text.trim(),
                       specialOffer: _specialOffer,
-                      createdAt: now,
+                      createdAt: DateTime.now(),
                     );
                     if (widget.productId == null || widget.productId == 'new') {
-                      await ref.read(firestoreServiceProvider).createProduct(product);
+                      await ref.read(firestoreServiceProvider).upsertProduct(product);
                     } else {
                       await ref.read(firestoreServiceProvider).upsertProduct(product);
                     }
-                    if (mounted) Navigator.of(context).pop();
+                    if (!mounted) return;
+                    Navigator.of(context).pop();
                   } catch (e) {
+                    if (!mounted) return;
                     ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('فشل الحفظ: $e')));
                   } finally {
                     if (mounted) setState(() => _loading = false);
